@@ -46,4 +46,6 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           DATABASE_TOKEN: ${{ secrets.DATABASE_TOKEN }}
         run: |
+          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env
+          echo "DATABASE_TOKEN=${{ secrets.DATABASE_TOKEN }}" >> .env
           deployctl deploy --token="${{ secrets.DENO_DEPLOY_TOKEN }}" --project="shuttle" --prod src/index.ts
