@@ -3,7 +3,10 @@
     "#/": "./src/"
   },
   "tasks": {
-    "dev": "deno run --unstable --allow-all --watch ./src/index.ts"
+    "dev": "deno run --unstable --allow-all --watch ./src/index.ts",
+    "lint": "deno lint --unstable . src",
+    "fmt": "deno fmt --unstable . src",
+    "typecheck": "deno check *.ts src/**/*.ts"
   },
   "lint": {
     "rules": {
@@ -25,7 +28,10 @@
     "checkJs": true,
     "lib": [
       "deno.window",
-      "unstable"
+      "deno.unstable",
+      "esnext",
+      "dom",
+      "dom.iterable"
     ],
     "jsx": "react-jsx",
     "jsxImportSource": "hono/jsx",

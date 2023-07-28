@@ -5,7 +5,6 @@ import { Hono } from 'https://deno.land/x/hono@v3.1.2/mod.ts'
 import { HTTPException } from 'https://deno.land/x/hono@v3.1.2/http-exception.ts'
 import { cors, logger, prettyJSON } from 'https://deno.land/x/hono@v3.1.2/middleware.ts'
 
-
 const app = new Hono()
 
 app.use('*', logger())

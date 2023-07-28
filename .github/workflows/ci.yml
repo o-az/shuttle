@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  CI: true
+  ACTIONS_RUNNER_DEBUG: true
+
+jobs:
+  deploy:
+    timeout-minutes: 10
+    permissions:
+      id-token: write
+      contents: read
+    runs-on: ["ubuntu-latest"]
+    steps:
+      - name: 🔑 Checkout
+        uses: actions/checkout@v3
+
+      - name: "🦕 Setup Deno"
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: vx.x.x
+
+      - name: "🧹 lint & fmt"
+        run: |
+          deno task lint
+          deno task fmt
+
+      - name: "🧪 typecheck"
+        run: deno task typecheck
+
+      - name: "🚀 Deploy"
+        uses: denoland/deployctl@v1
+        with:
+          project: "shuttle"
+          entrypoint: "src/index.ts"
