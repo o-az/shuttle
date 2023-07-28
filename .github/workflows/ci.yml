@@ -18,7 +18,7 @@ env:
 
 jobs:
   deploy:
-    timeout-minutes: 3
+    timeout-minutes: 4
     runs-on: ["ubuntu-latest"]
     steps:
       - name: 🔑 Checkout
@@ -36,3 +36,14 @@ jobs:
 
       - name: "🧪 typecheck"
         run: deno task typecheck
+
+      - name: "Install deployctl"
+        run: deno install --allow-all --no-check --reload --force https://deno.land/x/deploy/deployctl.ts
+
+      - name: "🚀 Deploy"
+        env:
+          DENO_DEPLOY_TOKEN: ${{ secrets.DENO_DEPLOY_TOKEN }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DATABASE_TOKEN: ${{ secrets.DATABASE_TOKEN }}
+        run: |
+          deployctl deploy --token="${{ secrets.DENO_DEPLOY_TOKEN }}" --project="shuttle" --prod src/index.ts
