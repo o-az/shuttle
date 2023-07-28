@@ -1,7 +1,7 @@
 import env from '#/environment.ts'
 import { base64ToString } from '#/utilities.ts'
+import { Landing, RenderJSON } from '#/page.tsx'
 import { getRecord, insertNewRecord } from '#/database/operations.ts'
-import { Page } from '#/page.tsx'
 
 import { Hono } from 'https://deno.land/x/hono@v3.1.2/mod.ts'
 import { HTTPException } from 'https://deno.land/x/hono@v3.1.2/http-exception.ts'
@@ -40,35 +40,30 @@ app.get('/error', (context) => {
   return context.json({ message: 'ok' })
 })
 
-app.get('/', (context) => {
-  return context.text('GET /:id\nPOST /new json')
+app.get('/', (context) => context.html(Landing()))
+
+app.get('/:record-id', async (context) => {
+  const id = context.req.param('record-id')
+  const row = await getRecord(id)
+  if (!row) return context.json({ message: 'Not Found' }, 404)
+  return context.html(RenderJSON(row.json))
 })
 
-app.get('/wip', (_context) => {
-  // const id = context.req.param('id')
-  return new Response(Page('{"lorem":"ipsum"}'), {
-    status: 200,
-    headers: {
-      'Content-Type': 'text/html; charset=utf-8',
-    },
-  })
-})
-
-app.get('/:id', async (context) => {
+app.get('/api/:id', async (context) => {
   const id = context.req.param('id')
   const row = await getRecord(id)
   if (!row) return context.json({ message: 'Not Found' }, 404)
   return context.json(JSON.parse(row.json))
 })
 
-app.get('/new/:encoded-content', async (context) => {
+app.get('/api/new/:encoded-content', async (context) => {
   const content = context.req.param('encoded-content')
   const decoded = base64ToString(content)
   const result = await insertNewRecord(decoded)
   return context.text(result.id)
 })
 
-app.post('/new', async (context) => {
+app.post('/api/new', async (context) => {
   const body = await context.req.json()
   const result = await insertNewRecord(JSON.stringify(body))
   return context.text(result.id)

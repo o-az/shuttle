@@ -45,7 +45,7 @@ jobs:
           DENO_DEPLOY_TOKEN: ${{ secrets.DENO_DEPLOY_TOKEN }}
         run: |
           deployctl deploy \
-            --prod \
-            --project="shuttle" \
-            --token="${{ env.DENO_DEPLOY_TOKEN }}" \
-            src/index.ts
+          --token="${{ env.DENO_DEPLOY_TOKEN }}" \
+          --project="shuttle" \
+          --prod \
+          src/index.ts
