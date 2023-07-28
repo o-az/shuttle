@@ -1,0 +1,35 @@
+{
+  "imports": {
+    "#/": "./src/"
+  },
+  "tasks": {
+    "dev": "deno run --unstable --allow-all --watch ./src/index.ts"
+  },
+  "lint": {
+    "rules": {
+      "exclude": ["ban-types"]
+    },
+    "include": ["./*.ts", "./src/**/*.ts"]
+  },
+  "fmt": {
+    "useTabs": false,
+    "lineWidth": 100,
+    "indentWidth": 2,
+    "singleQuote": true,
+    "semiColons": false,
+    "proseWrap": "never"
+  },
+  "compilerOptions": {
+    "strict": true,
+    "allowJs": true,
+    "checkJs": true,
+    "lib": [
+      "deno.window",
+      "unstable"
+    ],
+    "jsx": "react-jsx",
+    "jsxImportSource": "hono/jsx",
+    "noUncheckedIndexedAccess": true
+  },
+  "exclude": ["./dist", "./data.sqid"]
+}
