@@ -1,6 +1,7 @@
 name: CI
 
 on:
+  workflow_dispatch:
   push:
     branches: [main]
 
@@ -17,7 +18,7 @@ env:
 
 jobs:
   deploy:
-    timeout-minutes: 10
+    timeout-minutes: 4
     permissions:
       id-token: write
       contents: read
@@ -41,6 +42,8 @@ jobs:
 
       - name: "🚀 Deploy"
         uses: denoland/deployctl@v1
+        env:
+          DENO_DEPLOY_TOKEN: ${{ secrets.DENO_DEPLOY_TOKEN }}
         with:
           project: "shuttle"
           entrypoint: "src/index.ts"
