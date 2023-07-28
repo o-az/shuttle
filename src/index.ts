@@ -42,7 +42,10 @@ app.get('/:record-id', async (context) => {
   const id = context.req.param('record-id')
   const row = await getRecord(id)
   if (!row) return context.json({ message: 'Not Found' }, 404)
-  return context.html(Markdown(row.json), 200)
+  return context.html(
+    Markdown(`\`\`\`json\n${JSON.stringify(JSON.parse(row.json), null, 2)}\n\`\`\``),
+    200,
+  )
 })
 
 app.get('/api/:id', async (context) => {

@@ -4,6 +4,9 @@ interface ImportMetaEnv {
   readonly DATABASE_TOKEN: string
   readonly BASE_URL: string
   readonly PORT?: string
+  // rate limiter
+  readonly UPSTASH_REDIS_REST_URL: string
+  readonly UPSTASH_REDIS_REST_TOKEN: string
 }
 
 interface ImportMeta {
