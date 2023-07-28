@@ -2,35 +2,44 @@ _❗🚧: This is a playground project at the moment. Don't store anything impor
 
 # Shuttle 🚀
 
-## JSON share service - Save and share JSONs
+### JSON share service - Save and share JSONs
 
 ### Usage
 
-#### Create a new JSON entry
+#### **Markdown render**
 
-```bash
-curl --silent --location \
-  --request POST \
-  --url 'https://shuttle.deno.dev/new' \
-  --header 'Content-Type: application/json' \
-  --data-raw '{ "hello": "world" }'
+  _`GET /:id`_ # gets record and renders markdown. Example:
 
-# returns: <id>
-```
+  [`https://shuttle.deno.dev/01H6D5KXV3FNDW7CQAABS27W86`](https://shuttle.deno.dev/01H6D5KXV3FNDW7CQAABS27W86)
 
-#### Get a JSON entry
+#### **JSON API**
 
-```bash
-curl --silent --location \
-  --request GET \
-  --url 'https://shuttle.deno.dev/<id>'
+  _`GET /api/:id`_ # gets record. Example:
 
-# returns: json (e.g. { "hello": "world" })
+  [`https://shuttle.deno.dev/api/01H6D5KXV3FNDW7CQAABS27W86`](http://shuttle.deno.dev/api/01H6D5KXV3FNDW7CQAABS27W86)
+
+  _`POST /api/new`_ # creates new record with JSON body. Example:
+
+  ```sh
+  curl -X POST http://shuttle.deno.dev/api/new>-d '{"hello":"world"}'
+
+# returns new record id
+
+  ```
+
+  _`GET /api/new/:encoded-content`_ # creates new record with base64 encoded content. Example:
+
+  [`https://shuttle.deno.dev/api/new/eyJmb28iOiJiYXIifQ==`](https://shuttle.deno.dev/api/new/eyJmb28iOiJiYXIifQ==)
+
+  ```sh
+  curl -X GET "https://shuttle.deno.dev/api/new/$(echo '{"foo":"bar"}' | base64)"
+
+# returns new record id
 ```
 
 ### Stack
 
-- Language: [Deno](https://deno.land)
+- Language: [TypeScript Deno](https://deno.land)
 - Storage: [libsql](https://libsql.org)
 - Storage Provider: [Turso](https://turso.tech)
 - Web Framework: [Hono](https://hono.dev)
