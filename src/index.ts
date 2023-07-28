@@ -1,17 +1,27 @@
 import env from '#/environment.ts'
+
 import { base64ToString } from '#/utilities.ts'
-import { Landing, RenderJSON } from '#/page.tsx'
+import { Landing } from '#/components/landing.tsx'
+import { RenderJSON } from '#/components/json.tsx'
 import { getRecord, insertNewRecord } from '#/database/operations.ts'
 
 import { Hono } from 'https://deno.land/x/hono@v3.1.2/mod.ts'
 import { HTTPException } from 'https://deno.land/x/hono@v3.1.2/http-exception.ts'
-import { cors, logger, prettyJSON } from 'https://deno.land/x/hono@v3.1.2/middleware.ts'
+import {
+  cache,
+  compress,
+  cors,
+  logger,
+  prettyJSON,
+} from 'https://deno.land/x/hono@v3.1.2/middleware.ts'
 
 const app = new Hono()
 
 app.use('*', logger())
+app.use('*', compress())
 app.use('*', cors({ origin: '*' }))
 app.use('*', prettyJSON({ space: 2 }))
+
 app.use('*', async (context, next) => {
   await next()
   context.res.headers.set('X-Powered-By', 'https://github.com/o-az')

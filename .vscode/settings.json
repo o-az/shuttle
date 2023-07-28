@@ -3,6 +3,7 @@
   "deno.path": "/opt/homebrew/bin/deno",
   "deno.unstable": true,
   "deno.lint": true,
+  "typescript.preferences.importModuleSpecifier": "non-relative",
   "editor.defaultFormatter": "denoland.vscode-deno",
   "[typescript]": {
     "editor.defaultFormatter": "denoland.vscode-deno"
