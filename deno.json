@@ -36,5 +36,5 @@
     "noUncheckedIndexedAccess": true,
     "strictPropertyInitialization": true
   },
-  "exclude": ["./dist", "./data.sqid", "*.db", "*.sqlite", ".github", ".vscode"]
+  "exclude": ["./dist", "./data.sqid", "*.db", "*.sqlite", ".github", ".vscode", "_"]
 }

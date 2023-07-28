@@ -6,6 +6,6 @@ set -eou pipefail
 
 curl --silent --location \
   --request POST \
-  --url 'http://localhost:3034/new' \
+  --url 'http://localhost:3034/api/new' \
   --header 'Content-Type: application/json' \
   --data-raw '{ "hello": "world" }'

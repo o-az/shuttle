@@ -21,7 +21,7 @@ _`GET /api/:id`_ # gets record. Example:
 _`POST /api/new`_ # creates new record with JSON body. Example:
 
 ```sh
-curl -X POST http://shuttle.deno.dev/api/new>-d '{"hello":"world"}'
+curl -X POST http://shuttle.deno.dev/api/new -d '{"foo":"bar"}'
 
 # returns new record id
 ```

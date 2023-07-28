@@ -8,3 +8,7 @@ export function base64ToString(base64Str: string): string {
   const decoded = base64.decode(base64Str)
   return new TextDecoder().decode(decoded)
 }
+
+export function payloadSize(payload: string): number {
+  return new TextEncoder().encode(payload).length
+}

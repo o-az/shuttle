@@ -1,8 +1,8 @@
 import env from '#/environment.ts'
 
-import { base64ToString } from '#/utilities.ts'
 import { Landing } from '#/components/landing.tsx'
 import { RenderJSON } from '#/components/json.tsx'
+import { base64ToString, payloadSize } from '#/utilities.ts'
 import { getRecord, insertNewRecord } from '#/database/operations.ts'
 
 import { Hono } from 'https://deno.land/x/hono@v3.1.2/mod.ts'
@@ -63,12 +63,14 @@ app.get('/api/:id', async (context) => {
 app.get('/api/new/:encoded-content', async (context) => {
   const content = context.req.param('encoded-content')
   const decoded = base64ToString(content)
+  const _size = payloadSize(decoded)
   const result = await insertNewRecord(decoded)
   return context.text(result.id)
 })
 
 app.post('/api/new', async (context) => {
   const body = await context.req.json()
+  const _size = payloadSize(body)
   const result = await insertNewRecord(JSON.stringify(body))
   return context.text(result.id)
 })

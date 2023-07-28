@@ -159,3 +159,4 @@ data.sqld
 *.db
 .env.ts
 *.lock
+_
