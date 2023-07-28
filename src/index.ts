@@ -1,5 +1,6 @@
-import { getRecord, insertNewRecord } from '#/database/operations.ts'
 import env from '#/environment.ts'
+import { base64ToString } from '#/utilities.ts'
+import { getRecord, insertNewRecord } from '#/database/operations.ts'
 
 import { Hono } from 'https://deno.land/x/hono@v3.1.2/mod.ts'
 import { HTTPException } from 'https://deno.land/x/hono@v3.1.2/http-exception.ts'
@@ -47,6 +48,13 @@ app.get('/:id', async (context) => {
   const row = await getRecord(id)
   if (!row) return context.json({ message: 'Not Found' }, 404)
   return context.json(JSON.parse(row.json))
+})
+
+app.get('/new/:encoded-content', async (context) => {
+  const content = context.req.param('encoded-content')
+  const decoded = base64ToString(content)
+  const result = await insertNewRecord(decoded)
+  return context.text(result.id)
 })
 
 app.post('/new', async (context) => {

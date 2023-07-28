@@ -35,7 +35,8 @@
     ],
     "jsx": "react-jsx",
     "jsxImportSource": "hono/jsx",
-    "noUncheckedIndexedAccess": true
+    "noUncheckedIndexedAccess": true,
+    "strictPropertyInitialization": true
   },
-  "exclude": ["./dist", "./data.sqid"]
+  "exclude": ["./dist", "./data.sqid", "*.db", "*.sqlite", ".github", ".vscode"]
 }
