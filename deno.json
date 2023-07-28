@@ -33,8 +33,6 @@
       "dom",
       "dom.iterable"
     ],
-    "jsx": "react-jsx",
-    "jsxImportSource": "hono/jsx",
     "noUncheckedIndexedAccess": true,
     "strictPropertyInitialization": true
   },

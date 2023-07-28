@@ -1,6 +1,7 @@
 import env from '#/environment.ts'
 import { base64ToString } from '#/utilities.ts'
 import { getRecord, insertNewRecord } from '#/database/operations.ts'
+import { Page } from '#/page.tsx'
 
 import { Hono } from 'https://deno.land/x/hono@v3.1.2/mod.ts'
 import { HTTPException } from 'https://deno.land/x/hono@v3.1.2/http-exception.ts'
@@ -41,6 +42,16 @@ app.get('/error', (context) => {
 
 app.get('/', (context) => {
   return context.text('GET /:id\nPOST /new json')
+})
+
+app.get('/wip', (_context) => {
+  // const id = context.req.param('id')
+  return new Response(Page('{"lorem":"ipsum"}'), {
+    status: 200,
+    headers: {
+      'Content-Type': 'text/html; charset=utf-8',
+    },
+  })
 })
 
 app.get('/:id', async (context) => {
