@@ -16,12 +16,12 @@ _`GET /:id`_ # gets record and renders markdown. Example:
 
 _`GET /api/:id`_ # gets record. Example:
 
-[`https://shuttle.deno.dev/api/01H6D5KXV3FNDW7CQAABS27W86`](http://shuttle.deno.dev/api/01H6D5KXV3FNDW7CQAABS27W86)
+[`https://shuttle.deno.dev/api/01H6D5KXV3FNDW7CQAABS27W86`](https://shuttle.deno.dev/api/01H6D5KXV3FNDW7CQAABS27W86)
 
 _`POST /api/new`_ # creates new record with JSON body. Example:
 
 ```sh
-curl -X POST http://shuttle.deno.dev/api/new -d '{"foo":"bar"}'
+curl -X POST https://shuttle.deno.dev/api/new -d '{"foo":"bar"}'
 
 # returns new record id
 ```
