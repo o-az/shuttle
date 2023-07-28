@@ -3,7 +3,7 @@ interface ImportMetaEnv {
   readonly DATABASE_URL: string
   readonly DATABASE_TOKEN: string
   readonly TURSO_AUTH_TOKEN: string
-  readonly PORT: string
+  readonly PORT?: string
 }
 
 interface ImportMeta {
