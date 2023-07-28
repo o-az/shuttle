@@ -1,63 +1,55 @@
-import env from '#/environment.ts'
-
-import { Landing } from '#/components/landing.tsx'
-import { RenderJSON } from '#/components/json.tsx'
-import { base64ToString, payloadSize } from '#/utilities.ts'
+import { env } from '#/environment.ts'
+import { middlewareApp } from '#/middleware.ts'
+import { Markdown } from '#/components/markdown.tsx'
 import { getRecord, insertNewRecord } from '#/database/operations.ts'
+import { base64ToString, decodeBufferFile, payloadSize } from '#/utilities.ts'
 
 import { Hono } from 'https://deno.land/x/hono@v3.1.2/mod.ts'
 import { HTTPException } from 'https://deno.land/x/hono@v3.1.2/http-exception.ts'
-import { compress, cors, logger, prettyJSON } from 'https://deno.land/x/hono@v3.1.2/middleware.ts'
 
 const app = new Hono()
+app.route('*', middlewareApp)
 
-app.use('*', logger())
-app.use('*', compress())
-app.use('*', cors({ origin: '*' }))
-app.use('*', prettyJSON({ space: 2 }))
-
-app.use('*', async (context, next) => {
-  await next()
-  context.res.headers.set('X-Powered-By', 'https://github.com/o-az')
+app.notFound((context) => {
+  const { url } = context.req
+  console.log(`[-- app.notFound]`, url)
+  return new Response(JSON.stringify({ message: `I can't find ${url}` }, null, 2), { status: 404 })
 })
-
-app.notFound(() => new Response('Not Found', { status: 404, statusText: 'Not Found' }))
 
 app.onError((error, context) => {
-  console.error(`-- app.onError [${context.req.url}]: ${error}`, context.error)
+  console.error(`[-- app.onError]`, context.req.url, error, context.error)
   if (error instanceof HTTPException) return error.getResponse()
-  return context.json({ message: error.message }, 500)
+  return new Response(JSON.stringify({ message: error.message }, null, 2), { status: 500 })
 })
 
-app.get('/env', (context) => {
-  if (env('ENVIRONMENT') !== 'development') {
-    return new Response(JSON.stringify({ ENVIRONMENT: 'production' }, undefined, 2), {
-      status: 418,
-    })
-  }
-  console.log(JSON.stringify(env, undefined, 2))
-  return context.json(env)
+app.get('/env', () => {
+  const ENVIRONMENT = env['ENVIRONMENT']
+  return new Response(JSON.stringify(ENVIRONMENT === 'development' ? { ENVIRONMENT } : env), {
+    status: 418,
+  })
 })
 
-app.get('/error', (context) => {
-  console.log({ path: context.req.path, url: context.req.url, error: context.error })
-  return context.json({ message: 'ok' })
-})
+app.get('/error', (context) => context.json({ message: context.error, url: context.req.url }))
 
-app.get('/', (context) => context.html(Landing()))
+app.get('/', (context) => {
+  const LANDING_PATH = new URL('./components/landing.md', import.meta.url)
+  return context.html(Markdown(
+    () => Deno.readTextFileSync(LANDING_PATH).replaceAll('$BASE_URL', env['BASE_URL']),
+  ))
+})
 
 app.get('/:record-id', async (context) => {
   const id = context.req.param('record-id')
   const row = await getRecord(id)
   if (!row) return context.json({ message: 'Not Found' }, 404)
-  return context.html(RenderJSON(row.json))
+  return context.html(Markdown(row.json), 200)
 })
 
 app.get('/api/:id', async (context) => {
   const id = context.req.param('id')
   const row = await getRecord(id)
   if (!row) return context.json({ message: 'Not Found' }, 404)
-  return context.json(JSON.parse(row.json))
+  return context.json(JSON.parse(row.json), 200)
 })
 
 app.get('/api/new/:encoded-content', async (context) => {
@@ -65,14 +57,24 @@ app.get('/api/new/:encoded-content', async (context) => {
   const decoded = base64ToString(content)
   const _size = payloadSize(decoded)
   const result = await insertNewRecord(decoded)
-  return context.text(result.id)
+  return context.text(result.id, 200)
 })
 
 app.post('/api/new', async (context) => {
   const body = await context.req.json()
   const _size = payloadSize(body)
+  console.log({ _size })
   const result = await insertNewRecord(JSON.stringify(body))
-  return context.text(result.id)
+  return context.text(result.id, 200)
+})
+
+app.post('/api/new/file', async (context) => {
+  const arrayBuffer = await context.req.arrayBuffer()
+  const decoded = decodeBufferFile(arrayBuffer)
+  const parsed = JSON.parse(decoded)
+  const _size = payloadSize(decoded)
+  const result = await insertNewRecord(JSON.stringify(parsed))
+  return context.text(result.id, 200)
 })
 
 const port = Number(Deno.env.get('PORT')) || 3034

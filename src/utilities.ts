@@ -12,3 +12,9 @@ export function base64ToString(base64Str: string): string {
 export function payloadSize(payload: string): number {
   return new TextEncoder().encode(payload).length
 }
+
+export function decodeBufferFile(arrayBuffer: ArrayBuffer): string {
+  const decoder = new TextDecoder()
+  const decoded = decoder.decode(arrayBuffer).split('\n').slice(4, -2).join('\n')
+  return decoded
+}

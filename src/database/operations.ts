@@ -1,9 +1,7 @@
-import { database } from '#/database/index.ts'
 import type { Row } from '#/types.ts'
+import { database } from '#/database/index.ts'
 
 import { ulid } from 'https://esm.sh/ulidx@2.1.0'
-
-export const generateID = () => ulid()
 
 export async function getRecord(id: string) {
   const { rows: [row] } = await database.execute({
@@ -22,7 +20,7 @@ export async function getAllRecords() {
 }
 
 export async function insertNewRecord(json: string) {
-  const id = generateID()
+  const id = ulid()
   const result = await database.execute({
     sql: /* sql */ `INSERT INTO json (id, json) VALUES ($id, $json)`,
     args: { id, json },

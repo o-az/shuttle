@@ -21,8 +21,18 @@ _`GET /api/:id`_ # gets record. Example:
 _`POST /api/new`_ # creates new record with JSON body. Example:
 
 ```sh
-curl -X POST https://shuttle.deno.dev/api/new -d '{"foo":"bar"}'
+curl --request POST \
+  --url https://shuttle.deno.dev/api/new \
+  --data '{"foo":"bar"}'
+# returns new record id
+```
 
+_`POST /api/new/file`_ # creates new record with JSON uploaded as a file. Example:
+
+```sh
+curl --request POST \
+  --url https://shuttle.deno.dev/api/new/file \
+  --form 'file=@/path/to/file.json'
 # returns new record id
 ```
 
@@ -31,8 +41,8 @@ _`GET /api/new/:encoded-content`_ # creates new record with base64 encoded conte
 [`https://shuttle.deno.dev/api/new/eyJmb28iOiJiYXIifQ==`](https://shuttle.deno.dev/api/new/eyJmb28iOiJiYXIifQ==)
 
 ```sh
-curl -X GET "https://shuttle.deno.dev/api/new/$(echo '{"foo":"bar"}' | base64)"
-
+curl --request GET \
+  --url "https://shuttle.deno.dev/api/new/$(echo '{"foo":"bar"}' | base64)"
 # returns new record id
 ```
 

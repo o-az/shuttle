@@ -1,5 +1,4 @@
-/** @jsx jsx */
-import { jsx, raw } from 'https://deno.land/x/hono@v3.1.2/middleware.ts'
+import { raw } from 'https://deno.land/x/hono@v3.1.2/middleware.ts'
 
 import { CSS as gfmCSS, KATEX_CSS } from 'https://deno.land/x/gfm@0.2.5/mod.ts'
 
