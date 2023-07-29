@@ -36,6 +36,10 @@ export function Layout(props: { children?: unknown }) {
         color: #8e9e9e;
       }
 
+      footer a {
+        border-bottom: 1px solid #8e9e9e;
+      }
+
       footer a::active {
         color: #fff;
       }
@@ -44,18 +48,22 @@ export function Layout(props: { children?: unknown }) {
         color: #fff;
       }
 
+      footer em {
+        color: #f7f7f7;
+        padding: 0 0.5rem;
+      }
+
       footer {
         width: 97.5%;
         height: 0.35rem;
         display: flex;
-        justify-content: space-between;
+        justify-content: flex-end;
         align-items: center;
         font-size: 0.7rem;
         bottom: 0;
         right: 0;
         position: fixed;
         padding: 10px;
-        margin-left: 12px;
       }
 
       section {
@@ -115,6 +123,7 @@ export function Layout(props: { children?: unknown }) {
       <a href='https://github.com/o-az/shuttle/issues/8' target='_blank' rel='noopener noreferrer'>
         feedback
       </a>
+      <em>-</em>
       <p>${env['ENVIRONMENT']}</p>
     </footer>
   </body>

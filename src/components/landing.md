@@ -1,10 +1,10 @@
-## **Markdown render**
+# **Markdown render**
 
 _`GET /:id`_ gets record and renders markdown. Example:
 
 [`$BASE_URL/01H6D5KXV3FNDW7CQAABS27W86`]($BASE_URL/01H6D5KXV3FNDW7CQAABS27W86)
 
-## **JSON API**
+# **JSON API**
 
 _`GET /api/:id`_ gets record. Example:
 
