@@ -3,11 +3,18 @@ import { load } from 'https://deno.land/std@0.196.0/dotenv/mod.ts'
 
 const loaded = await load({ export: true })
 
-Object.assign(loaded, {
-  BASE_URL: Deno.env.get('DENO_DEPLOYMENT_ID') || Deno.env.get('DENO_REGION')
+Deno.env.set(
+  'BASE_URL',
+  Deno.env.get('DENO_DEPLOYMENT_ID') || Deno.env.get('DENO_REGION')
     ? 'https://shuttle.deno.dev'
     : 'http://localhost:3034',
+)
+
+Object.assign(loaded, {
+  BASE_URL: Deno.env.get('BASE_URL'),
 })
+
+const environmentSource = Deno.env.get('DENO_DEPLOYMENT_ID') ? Deno.env.toObject() : loaded
 
 const EnvironmentSchema = v.object({
   ENVIRONMENT: v.union([v.literal('development'), v.literal('production'), v.literal('test')]),
@@ -21,6 +28,6 @@ const EnvironmentSchema = v.object({
   UPSTASH_REDIS_REST_TOKEN: v.string(),
 })
 
-export const env = v.parse(EnvironmentSchema, loaded) satisfies v.Output<
+export const env = v.parse(EnvironmentSchema, environmentSource) satisfies v.Output<
   typeof EnvironmentSchema
 >
