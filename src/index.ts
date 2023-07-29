@@ -6,6 +6,7 @@ import { base64ToString, decodeBufferFile } from '#/utilities.ts'
 import { getRecord, insertNewRecord } from '#/database/operations.ts'
 
 import { Hono } from 'https://deno.land/x/hono@v3.1.2/mod.ts'
+import { Feedback } from '#/components/feedback.tsx'
 
 const app = new Hono()
 app.route('*', middlewareApp)
@@ -16,6 +17,10 @@ app.get('/', (context) => {
   return context.html(Markdown(
     () => Deno.readTextFileSync(LANDING_PATH).replaceAll('$BASE_URL', env['BASE_URL']),
   ))
+})
+
+app.get('/feedback', (context) => {
+  return context.html(Feedback(), 200)
 })
 
 app.get('/:record-id', async (context) => {
