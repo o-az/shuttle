@@ -2,7 +2,6 @@ interface ImportMetaEnv {
   readonly ENVIRONMENT: 'development' | 'production' | 'test'
   readonly DATABASE_URL: string
   readonly DATABASE_TOKEN: string
-  readonly BASE_URL: string
   readonly PORT?: string
   // rate limiter
   readonly UPSTASH_REDIS_REST_URL: string

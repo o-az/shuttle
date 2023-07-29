@@ -7,11 +7,10 @@ import { Redis } from 'https://deno.land/x/upstash_redis@v1.22.0/mod.ts'
 
 const ratelimit = new Ratelimit({
   redis: Redis.fromEnv(),
-  // TODO figure out a reasonable limit
-  limiter: Ratelimit.slidingWindow(1, '1 s'),
+  timeout: 1_000,
   analytics: true,
-  'timeout': 1_000,
   prefix: '@upstash/ratelimit',
+  limiter: Ratelimit.slidingWindow(10, '10 s'),
 })
 
 export async function checkRatelimit({
