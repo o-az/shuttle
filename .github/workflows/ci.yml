@@ -20,6 +20,10 @@ env:
 
 jobs:
   deploy:
+    permissions:
+      contents: write
+      id-token: write
+      deployments: write
     timeout-minutes: 5
     env:
       DENO_DEPLOY_TOKEN: ${{ secrets.DENO_DEPLOY_TOKEN }}
@@ -44,7 +48,7 @@ jobs:
           deno task typecheck
 
       - name: "Install deployctl"
-        run: deno install --allow-read --allow-run --allow-write --force --unstable https://deno.land/x/deploy/deployctl.ts
+        run: deno install --allow-all --no-check --reload --force https://deno.land/x/deploy/deployctl.ts
 
       - name: "Populate .env"
         run: |
@@ -56,4 +60,5 @@ jobs:
           echo "UPSTASH_REDIS_REST_URL=${{ env.UPSTASH_REDIS_REST_URL }}" >> .env
           echo "UPSTASH_REDIS_REST_TOKEN=${{ env.UPSTASH_REDIS_REST_TOKEN }}" >> .env
 
-          deployctl deploy --token="${{ env.DENO_DEPLOY_TOKEN }}" --project="shuttle" --prod src/index.ts
+      - name: "Deploy"
+        run: deployctl deploy --token="${{ env.DENO_DEPLOY_TOKEN }}" --project="shuttle" --prod src/index.ts
