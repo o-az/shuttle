@@ -1,20 +1,13 @@
 import * as v from 'https://deno.land/x/valibot@v0.5.0/mod.ts'
 import { load } from 'https://deno.land/std@0.196.0/dotenv/mod.ts'
 
-const loaded = await load({ export: true })
-
-Deno.env.set(
-  'BASE_URL',
-  Deno.env.get('DENO_DEPLOYMENT_ID') || Deno.env.get('DENO_REGION')
-    ? 'https://shuttle.deno.dev'
-    : 'http://localhost:3034',
-)
+const loaded = await load({ export: true, allowEmptyValues: true, examplePath: '' })
 
 Object.assign(loaded, {
-  BASE_URL: Deno.env.get('BASE_URL'),
+  BASE_URL: loaded['DENO_DEPLOYMENT_ID'] || loaded['DENO_REGION']
+    ? 'https://shuttle.deno.dev'
+    : 'http://localhost:3034',
 })
-
-const environmentSource = Deno.env.get('DENO_DEPLOYMENT_ID') ? Deno.env.toObject() : loaded
 
 const EnvironmentSchema = v.object({
   ENVIRONMENT: v.union([v.literal('development'), v.literal('production'), v.literal('test')]),
@@ -28,6 +21,6 @@ const EnvironmentSchema = v.object({
   UPSTASH_REDIS_REST_TOKEN: v.string(),
 })
 
-export const env = v.parse(EnvironmentSchema, environmentSource) satisfies v.Output<
+export const env = v.parse(EnvironmentSchema, loaded) satisfies v.Output<
   typeof EnvironmentSchema
 >
