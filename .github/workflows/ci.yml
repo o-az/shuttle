@@ -15,10 +15,18 @@ defaults:
 env:
   CI: true
   ACTIONS_RUNNER_DEBUG: true
+  ENVIRONMENT: "production"
+  BASE_URL: "https://shuttle.deno.dev"
 
 jobs:
   deploy:
-    timeout-minutes: 2
+    timeout-minutes: 5
+    env:
+      DENO_DEPLOY_TOKEN: ${{ secrets.DENO_DEPLOY_TOKEN }}
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      DATABASE_TOKEN: ${{ secrets.DATABASE_TOKEN }}
+      UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL }}
+      UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN }}
     runs-on: ["ubuntu-latest"]
     steps:
       - name: 🔑 Checkout
@@ -34,3 +42,18 @@ jobs:
           deno task lint
           deno task fmt
           deno task typecheck
+
+      - name: "Install deployctl"
+        run: deno install --allow-read --allow-run --allow-write --force --unstable https://deno.land/x/deploy/deployctl.ts
+
+      - name: "Populate .env"
+        run: |
+          echo "ENVIRONMENT=${{ env.ENVIRONMENT }}" >> .env
+          echo "DATABASE_URL=${{ env.DATABASE_URL }}" >> .env
+          echo "DATABASE_TOKEN=${{ env.DATABASE_TOKEN }}" >> .env
+          echo "BASE_URL=${{ env.BASE_URL }}" >> .env
+          echo "PORT=3034" >> .env
+          echo "UPSTASH_REDIS_REST_URL=${{ env.UPSTASH_REDIS_REST_URL }}" >> .env
+          echo "UPSTASH_REDIS_REST_TOKEN=${{ env.UPSTASH_REDIS_REST_TOKEN }}" >> .env
+
+          deployctl deploy --token="${{ env.DENO_DEPLOY_TOKEN }}" --project="shuttle" --prod src/index.ts
