@@ -1,3 +1,18 @@
-import 'https://deno.land/std@0.196.0/dotenv/load.ts'
+import * as v from 'https://deno.land/x/valibot@v0.5.0/mod.ts'
+import { load } from 'https://deno.land/std@0.196.0/dotenv/mod.ts'
 
-export const env = Deno.env.toObject()
+const loaded = await load({ export: true })
+
+const EnvironmentSchema = v.object({
+  ENVIRONMENT: v.union([v.literal('development'), v.literal('production'), v.literal('test')]),
+  DATABASE_URL: v.string([v.url()]),
+  DATABASE_TOKEN: v.string(),
+  BASE_URL: v.string([v.url()]),
+  PORT: v.optional(v.string()),
+  UPSTASH_REDIS_REST_URL: v.string([v.url()]),
+  UPSTASH_REDIS_REST_TOKEN: v.string(),
+})
+
+export const env = v.parse(EnvironmentSchema, loaded) satisfies v.Output<
+  typeof EnvironmentSchema
+>

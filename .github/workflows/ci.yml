@@ -29,7 +29,8 @@ jobs:
         with:
           deno-version: vx.x.x
 
-      - name: "🧹 lint & fmt"
+      - name: "🧹 lint & fmt & typecheck"
         run: |
           deno task lint
           deno task fmt
+          deno task typecheck

@@ -1,3 +1,4 @@
+import '#/environment.ts'
 import { stringToBase64 } from '#/utilities.ts'
 
 import { Ratelimit } from 'https://esm.sh/@upstash/ratelimit@0.4.3'
@@ -7,7 +8,7 @@ import { Redis } from 'https://deno.land/x/upstash_redis@v1.22.0/mod.ts'
 const ratelimit = new Ratelimit({
   redis: Redis.fromEnv(),
   // TODO figure out a reasonable limit
-  limiter: Ratelimit.slidingWindow(10, '10 s'),
+  limiter: Ratelimit.slidingWindow(1, '1 s'),
   analytics: true,
   'timeout': 1_000,
   prefix: '@upstash/ratelimit',
@@ -33,6 +34,5 @@ export async function checkRatelimit({
   if (!success) {
     return new Response('Too Many Requests', { status: 429 })
   }
-
   await next()
 }
