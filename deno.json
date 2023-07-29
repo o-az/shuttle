@@ -6,7 +6,8 @@
     "dev": "deno run --unstable --allow-all --watch ./src/index.ts",
     "lint": "deno lint --unstable . src",
     "fmt": "deno fmt --unstable . src",
-    "typecheck": "deno check *.ts src/**/*.ts"
+    "typecheck": "deno check *.ts src/**/*.ts",
+    "deploy": "/bin/bash ./scripts/deploy.sh"
   },
   "lint": {
     "rules": {
