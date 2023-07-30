@@ -18,7 +18,7 @@ export async function ratelimitReached({
   info: Deno.ServeHandlerInfo
 }) {
   const { hostname: identifier } = info?.remoteAddr ?? 'anonymous'
-  const { limit, remaining, reset, success, pending: _ } = await ratelimit.limit(identifier)
+  const { limit, remaining, reset, success } = await ratelimit.limit(identifier)
   console.log({ limit, remaining, reset, success })
 
   const headers = new Headers({

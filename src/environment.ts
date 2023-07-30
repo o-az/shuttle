@@ -7,6 +7,7 @@ Object.assign(loaded, {
   BASE_URL: Deno.env.get('DENO_DEPLOYMENT_ID') || Deno.env.get('DENO_REGION')
     ? 'https://shuttle.deno.dev'
     : 'http://localhost:3034',
+  PORT: '3034',
 })
 
 const EnvironmentSchema = v.object({

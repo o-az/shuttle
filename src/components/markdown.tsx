@@ -11,10 +11,7 @@ export function Markdown(
 ) {
   const Rendered = memo(() => {
     const stringContent = typeof content === 'function' ? content() : content
-    const markdownToHTML = render(stringContent, {
-      allowMath: true,
-      allowIframes: true,
-    })
+    const markdownToHTML = render(stringContent)
     return raw(markdownToHTML)
   })
   return (

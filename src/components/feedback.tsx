@@ -6,8 +6,10 @@ import { jsx } from 'https://deno.land/x/hono@v3.1.2/middleware.ts'
 export function Feedback() {
   return (
     <Root>
-      <main style='text-align: center;'>
-        <h4 style='color: rgb(228, 228, 231);'>Share any feedback or feature requests</h4>
+      <main>
+        <h4>
+          Share any feedback or feature requests
+        </h4>
         <section>
           <script
             src='https://giscus.app/client.js'
@@ -22,7 +24,7 @@ export function Feedback() {
             data-strict='0'
             data-theme='preferred_color_scheme'
             data-loading='lazy'
-            crossorigin='anonymous'
+            crossOrigin='anonymous'
             async
           >
           </script>

@@ -14,11 +14,9 @@ sed -i '' 's/ENVIRONMENT="development"/ENVIRONMENT="production"/g' .env
 # replace BASE_URL="http://localhost:3034" with BASE_URL="https://shuttle.deno.dev"
 sed -i '' 's/BASE_URL="http:\/\/localhost:3034"/BASE_URL="https:\/\/shuttle.deno.dev"/g' .env
 
-deployctl deploy \
-  --token="$DENO_DEPLOY_TOKEN" \
-  --project="shuttle" \
-  --prod \
-  src/index.ts
+deno run --allow-all esbuild.config.ts
+
+deployctl deploy --token="$DENO_DEPLOY_TOKEN" --project="shuttle" --prod dist/index.js
 
 # replace ENVIRONMENT="production" with ENVIRONMENT="development"
 sed -i '' 's/ENVIRONMENT="production"/ENVIRONMENT="development"/g' .env

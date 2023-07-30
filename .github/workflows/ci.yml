@@ -24,16 +24,10 @@ jobs:
       contents: write
       id-token: write
       deployments: write
-    timeout-minutes: 5
-    env:
-      DENO_DEPLOY_TOKEN: ${{ secrets.DENO_DEPLOY_TOKEN }}
-      DATABASE_URL: ${{ secrets.DATABASE_URL }}
-      DATABASE_TOKEN: ${{ secrets.DATABASE_TOKEN }}
-      UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL }}
-      UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN }}
+    timeout-minutes: 3.5
     runs-on: ["ubuntu-latest"]
     steps:
-      - name: 🔑 Checkout
+      - name: "🏨 Checkout"
         uses: actions/checkout@v3
 
       - name: "🦕 Setup Deno"
@@ -50,15 +44,17 @@ jobs:
       - name: "Install deployctl"
         run: deno install --allow-all --no-check --reload --force https://deno.land/x/deploy/deployctl.ts
 
-      - name: "Populate .env"
+      - name: "🔑 Populate Environment Variables"
         run: |
           echo "ENVIRONMENT=${{ env.ENVIRONMENT }}" >> .env
-          echo "DATABASE_URL=${{ env.DATABASE_URL }}" >> .env
-          echo "DATABASE_TOKEN=${{ env.DATABASE_TOKEN }}" >> .env
+          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env
+          echo "DATABASE_TOKEN=${{ secrets.DATABASE_TOKEN }}" >> .env
           echo "BASE_URL=${{ env.BASE_URL }}" >> .env
-          echo "PORT=3034" >> .env
-          echo "UPSTASH_REDIS_REST_URL=${{ env.UPSTASH_REDIS_REST_URL }}" >> .env
-          echo "UPSTASH_REDIS_REST_TOKEN=${{ env.UPSTASH_REDIS_REST_TOKEN }}" >> .env
+          echo "UPSTASH_REDIS_REST_URL=${{ secrets.UPSTASH_REDIS_REST_URL }}" >> .env
+          echo "UPSTASH_REDIS_REST_TOKEN=${{ secrets.UPSTASH_REDIS_REST_TOKEN }}" >> .env
 
-      - name: "Deploy"
-        run: deployctl deploy --token="${{ env.DENO_DEPLOY_TOKEN }}" --project="shuttle" --prod src/index.ts
+      - name: "🥬 Deploy App"
+        run: |
+          deno run --allow-all esbuild.config.ts
+
+          deployctl deploy --token="${{ secrets.DENO_DEPLOY_TOKEN }}" --project="shuttle" --prod ./dist/index.js
