@@ -34,11 +34,11 @@
     "allowJs": true,
     "checkJs": true,
     "lib": [
-      "deno.window",
-      "deno.unstable",
-      "esnext",
       "dom",
-      "dom.iterable"
+      "esnext",
+      "deno.window",
+      "dom.iterable",
+      "deno.unstable"
     ],
     "noUncheckedIndexedAccess": true,
     "strictPropertyInitialization": true

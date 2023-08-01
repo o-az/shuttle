@@ -17,17 +17,16 @@ export async function ratelimitReached({
   request: Request
   info: Deno.ServeHandlerInfo
 }) {
+  const headers = new Headers(request.headers)
   const { hostname: identifier } = info?.remoteAddr ?? 'anonymous'
+  if (env['ENVIRONMENT'] === 'development') return { reached: false, headers }
   const { limit, remaining, reset, success } = await ratelimit.limit(identifier)
   console.log({ limit, remaining, reset, success })
 
-  const headers = new Headers({
-    ...request.headers,
-    'X-RateLimit-Reached': `${!success}`,
-    'X-RateLimit-Limit': limit.toString(),
-    'X-RateLimit-Remaining': remaining.toString(),
-    'X-RateLimit-Reset': new Date(reset).toISOString(),
-  })
+  headers.set('X-RateLimit-Reached', `${!success}`)
+  headers.set('X-RateLimit-Limit', limit.toString())
+  headers.set('X-RateLimit-Remaining', remaining.toString())
+  headers.set('X-RateLimit-Reset', new Date(reset).toISOString())
 
   return { reached: !success, headers }
 }

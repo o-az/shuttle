@@ -3,15 +3,30 @@ import { env } from '#/environment.ts'
 import { Root } from '#/components/root.tsx'
 
 import { jsx, type JSXNode, raw } from 'https://deno.land/x/hono@v3.1.2/middleware.ts'
-import { CSS as gfmCSS, KATEX_CSS } from 'https://deno.land/x/gfm@0.2.5/mod.ts'
+import { CSS as GFM_CSS, KATEX_CSS } from 'https://deno.land/x/gfm@0.2.5/style.js'
+
+const Footer = () => (
+  <footer>
+    <a href='/feedback'>
+      feedback
+    </a>
+    <em>-</em>
+    <p>{env['ENVIRONMENT']}</p>
+  </footer>
+)
 
 export function Layout(props: { children?: JSXNode }) {
   return (
-    <Root>
-      <style>
-        {raw(gfmCSS)}
-        {raw(KATEX_CSS)}
-      </style>
+    <Root
+      {...{
+        head: (
+          <style>
+            {raw(GFM_CSS)}
+            {raw(KATEX_CSS)}
+          </style>
+        ),
+      }}
+    >
       <main>
         <section
           data-color-mode='auto'
@@ -22,13 +37,7 @@ export function Layout(props: { children?: JSXNode }) {
           {raw(props.children)}
         </section>
       </main>
-      <footer>
-        <a href='/feedback'>
-          feedback
-        </a>
-        <em>-</em>
-        <p>{env['ENVIRONMENT']}</p>
-      </footer>
+      <Footer />
     </Root>
   )
 }

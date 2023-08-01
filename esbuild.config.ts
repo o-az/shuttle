@@ -2,14 +2,12 @@ import * as esbuild from 'https://deno.land/x/esbuild@v0.18.17/mod.js'
 import denoConfig from './deno.json' assert { type: 'json' }
 
 main()
-  .catch((error) => {
-    console.error(error)
-    Deno.exit(1)
-  })
 
 async function main() {
   console.info('Building…')
   try {
+    await Deno.remove('./dist', { recursive: true })
+
     await esbuild.build({
       entryPoints: ['./src/index.ts'],
       bundle: true,

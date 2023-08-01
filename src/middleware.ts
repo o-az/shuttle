@@ -2,13 +2,19 @@ import { env } from '#/environment.ts'
 
 import { Hono } from 'https://deno.land/x/hono@v3.1.2/mod.ts'
 import { HTTPException } from 'https://deno.land/x/hono@v3.1.2/http-exception.ts'
-import { compress, cors, logger, prettyJSON } from 'https://deno.land/x/hono@v3.1.2/middleware.ts'
+import {
+  //compress,
+  cors,
+  logger,
+  prettyJSON,
+} from 'https://deno.land/x/hono@v3.1.2/middleware.ts'
 
 const middlewareApp = new Hono()
 
 middlewareApp.use('*', logger())
 middlewareApp.use('*', prettyJSON())
-middlewareApp.use('*', compress({ encoding: 'gzip' }))
+// compress shows weird characters in the browser
+// middlewareApp.use('*', compress())
 
 middlewareApp.use(
   '*',

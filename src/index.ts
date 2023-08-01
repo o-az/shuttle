@@ -20,7 +20,7 @@ app.get('/', (context) => {
 })
 
 app.get('/feedback', (context) => {
-  return context.html(Feedback(), 200)
+  return context.html(Feedback({}), 200)
 })
 
 app.get('/:record-id', async (context) => {
