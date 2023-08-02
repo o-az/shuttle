@@ -10,21 +10,30 @@ export const seconds = (n: number) => n * SECOND
 export const minutes = (n: number) => n * MINUTE
 export const hours = (n: number) => n * HOUR
 
-export function stringToBase64(str: string): string {
-  return base64.encode(str)
+export function stringToBase64(str: string) {
+  return new TextEncoder().encode(str)
 }
 
-export function base64ToString(base64Str: string): string {
+export function base64ToString(base64Str: string) {
   const decoded = base64.decode(base64Str)
   return new TextDecoder().decode(decoded)
 }
 
-export function payloadSize(payload: string): number {
+export function payloadSize(payload: string) {
   return new TextEncoder().encode(payload).length
 }
 
-export function decodeBufferFile(arrayBuffer: ArrayBuffer): string {
+export function decodeBufferFile(arrayBuffer: ArrayBuffer) {
   const decoder = new TextDecoder()
   const decoded = decoder.decode(arrayBuffer).split('\n').slice(4, -2).join('\n')
   return decoded
+}
+
+export async function removeFile(...parameters: Parameters<typeof Deno.remove>) {
+  try {
+    await Deno.remove(...parameters)
+  } catch (error) {
+    if (error instanceof Deno.errors.NotFound) return
+    throw error
+  }
 }
